@@ -39,3 +39,6 @@ A full-stack AI Interview Coach web application built with Python, Streamlit, an
 3. Click "Generate Interview Questions".
 4. Go to **Step 2** to answer the questions. You can type your answer or record it using your microphone.
 5. Review immediate feedback in **Step 3** and your final report in **Step 4**.
+
+## Figure
+[User Interface] (https://github.com/Arpit-mhjn1/ai-interview-coach/blob/main/Screenshot%202026-06-03%20163624.png)
