@@ -236,3 +236,7 @@ with tab4:
                     st.write(summary_response.content)
             except Exception as e:
                 st.error(f"Error generating summary: {str(e)}")
+
+# --- Footer ---
+st.markdown("---")
+st.markdown("<div style='text-align: center; color: grey;'>Built by <b>Arpit Website & App Studio</b></div>", unsafe_allow_html=True)
