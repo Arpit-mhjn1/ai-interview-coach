@@ -30,7 +30,7 @@ def get_llm():
         if not GOOGLE_API_KEY:
             raise ValueError("GOOGLE_API_KEY is not set in environment.")
         from langchain_google_genai import ChatGoogleGenerativeAI
-        return ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.7)
+        return ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0.7)
     elif MODEL_PROVIDER == "openai":
         if not OPENAI_API_KEY:
             raise ValueError("OPENAI_API_KEY is not set in environment.")
