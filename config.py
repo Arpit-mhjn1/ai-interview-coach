@@ -20,21 +20,21 @@ DEFAULT_ROLES = [
 ]
 
 # Model Configuration
-MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "gemini").lower()
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
 def get_llm():
     """Returns the configured LLM instance."""
-    if MODEL_PROVIDER == "gemini":
-        if not GOOGLE_API_KEY:
+    provider = os.environ.get("MODEL_PROVIDER", "gemini")
+    
+    if provider == "gemini":
+        google_key = os.environ.get("GOOGLE_API_KEY")
+        if not google_key:
             raise ValueError("GOOGLE_API_KEY is not set in environment.")
         from langchain_google_genai import ChatGoogleGenerativeAI
-        return ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.7)
-    elif MODEL_PROVIDER == "openai":
-        if not OPENAI_API_KEY:
+        return ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.7, google_api_key=google_key)
+    elif provider == "openai":
+        openai_key = os.environ.get("OPENAI_API_KEY")
+        if not openai_key:
             raise ValueError("OPENAI_API_KEY is not set in environment.")
         from langchain_openai import ChatOpenAI
-        return ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+        return ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7, api_key=openai_key)
     else:
-        raise ValueError(f"Unsupported MODEL_PROVIDER: {MODEL_PROVIDER}")
+        raise ValueError(f"Unsupported MODEL_PROVIDER: {provider}")
