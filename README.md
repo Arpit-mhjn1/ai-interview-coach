@@ -41,4 +41,4 @@ A full-stack AI Interview Coach web application built with Python, Streamlit, an
 5. Review immediate feedback in **Step 3** and your final report in **Step 4**.
 
 ## Figure
-[User Interface](Screenshot 2026-06-03 163624.png)
+![User Interface](Screenshot 2026-06-03 163624.png)
