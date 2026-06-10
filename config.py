@@ -21,31 +21,13 @@ DEFAULT_ROLES = [
 
 # Model Configuration
 def get_llm():
-    """Returns the configured LLM instance."""
-    provider = os.environ.get("MODEL_PROVIDER", "gemini")
-    
-    if provider == "gemini":
-        google_key = os.environ.get("GOOGLE_API_KEY")
-        if not google_key:
-            raise ValueError("GOOGLE_API_KEY is not set in environment.")
-        from langchain_google_genai import ChatGoogleGenerativeAI
-        return ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.7, google_api_key=google_key)
-    elif provider == "openai":
-        openai_key = os.environ.get("OPENAI_API_KEY")
-        if not openai_key:
-            raise ValueError("OPENAI_API_KEY is not set in environment.")
-        from langchain_openai import ChatOpenAI
-        return ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7, api_key=openai_key)
-    elif provider == "groq":
-        groq_key = os.environ.get("GROQ_API_KEY")
-        if not groq_key:
-            raise ValueError("GROQ_API_KEY is not set in environment.")
-        from langchain_openai import ChatOpenAI
-        return ChatOpenAI(
-            model="llama-3.3-70b-versatile", 
-            temperature=0.7, 
-            api_key=groq_key,
-            base_url="https://api.groq.com/openai/v1"
-        )
-    else:
-        raise ValueError(f"Unsupported MODEL_PROVIDER: {provider}")
+    groq_key = os.environ.get("GROQ_API_KEY")
+    if not groq_key:
+        raise ValueError("GROQ_API_KEY is not set. Please add it to Streamlit Secrets.")
+    from langchain_openai import ChatOpenAI
+    return ChatOpenAI(
+        model="llama-3.3-70b-versatile", 
+        temperature=0.7, 
+        api_key=groq_key,
+        base_url="https://api.groq.com/openai/v1"
+    )

@@ -25,26 +25,8 @@ if 'current_question_idx' not in st.session_state:
 with st.sidebar:
     st.title("⚙️ Configuration")
     
-    # Allow overriding API key from UI
-    st.markdown("### API Keys")
-    api_key_input = st.text_input("Enter API Key (Optional if in .env)", type="password")
-    
-    # Determine default index
-    default_provider = os.environ.get("MODEL_PROVIDER", "gemini").lower()
-    index_map = {"gemini": 0, "openai": 1, "groq": 2}
-    default_index = index_map.get(default_provider, 0)
-
-    model_choice = st.selectbox("Select Model Provider", ["gemini", "openai", "groq"], index=default_index)
-    
-    if api_key_input:
-        if model_choice == "gemini":
-            os.environ["GOOGLE_API_KEY"] = api_key_input
-        elif model_choice == "openai":
-            os.environ["OPENAI_API_KEY"] = api_key_input
-        elif model_choice == "groq":
-            os.environ["GROQ_API_KEY"] = api_key_input
-            
-    os.environ["MODEL_PROVIDER"] = model_choice
+    st.markdown("### Info")
+    st.info("Using Groq Llama 3 for ultra-fast, free generation.")
 
 # --- Main App Logic ---
 st.title(f"{PAGE_ICON} {APP_TITLE}")
