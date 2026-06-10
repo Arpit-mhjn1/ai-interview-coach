@@ -29,13 +29,20 @@ with st.sidebar:
     st.markdown("### API Keys")
     api_key_input = st.text_input("Enter API Key (Optional if in .env)", type="password")
     
-    model_choice = st.selectbox("Select Model Provider", ["gemini", "openai"], index=0 if os.getenv("MODEL_PROVIDER", "gemini").lower() == "gemini" else 1)
+    # Determine default index
+    default_provider = os.environ.get("MODEL_PROVIDER", "gemini").lower()
+    index_map = {"gemini": 0, "openai": 1, "groq": 2}
+    default_index = index_map.get(default_provider, 0)
+
+    model_choice = st.selectbox("Select Model Provider", ["gemini", "openai", "groq"], index=default_index)
     
     if api_key_input:
         if model_choice == "gemini":
             os.environ["GOOGLE_API_KEY"] = api_key_input
-        else:
+        elif model_choice == "openai":
             os.environ["OPENAI_API_KEY"] = api_key_input
+        elif model_choice == "groq":
+            os.environ["GROQ_API_KEY"] = api_key_input
             
     os.environ["MODEL_PROVIDER"] = model_choice
 

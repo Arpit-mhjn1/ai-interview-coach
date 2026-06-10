@@ -36,5 +36,16 @@ def get_llm():
             raise ValueError("OPENAI_API_KEY is not set in environment.")
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7, api_key=openai_key)
+    elif provider == "groq":
+        groq_key = os.environ.get("GROQ_API_KEY")
+        if not groq_key:
+            raise ValueError("GROQ_API_KEY is not set in environment.")
+        from langchain_openai import ChatOpenAI
+        return ChatOpenAI(
+            model="llama3-8b-8192", 
+            temperature=0.7, 
+            api_key=groq_key,
+            base_url="https://api.groq.com/openai/v1"
+        )
     else:
         raise ValueError(f"Unsupported MODEL_PROVIDER: {provider}")
