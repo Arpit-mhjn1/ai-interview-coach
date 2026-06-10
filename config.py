@@ -42,7 +42,7 @@ def get_llm():
             raise ValueError("GROQ_API_KEY is not set in environment.")
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(
-            model="llama3-8b-8192", 
+            model="llama-3.3-70b-versatile", 
             temperature=0.7, 
             api_key=groq_key,
             base_url="https://api.groq.com/openai/v1"
