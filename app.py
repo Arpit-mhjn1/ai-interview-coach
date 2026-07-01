@@ -5,6 +5,7 @@ from utils.resume_parser import parse_resume, extract_key_info
 from utils.question_generator import generate_questions
 from utils.answer_evaluator import evaluate_answer
 from utils.speech_to_text import transcribe_audio_bytes
+from utils.prep_agent import get_prep_guidance
 
 # --- Page Config ---
 st.set_page_config(page_title=APP_TITLE, page_icon=PAGE_ICON, layout="wide")
@@ -20,6 +21,10 @@ if 'evaluations' not in st.session_state:
     st.session_state.evaluations = {} # {question_idx: evaluation_dict}
 if 'current_question_idx' not in st.session_state:
     st.session_state.current_question_idx = 0
+if 'prep_advice' not in st.session_state:
+    st.session_state.prep_advice = {} # {question_idx: prep_advice_text}
+if 'job_role' not in st.session_state:
+    st.session_state.job_role = ""
 
 # --- Sidebar Configuration ---
 with st.sidebar:
@@ -87,6 +92,8 @@ with tab1:
                     st.session_state.answers = {}
                     st.session_state.evaluations = {}
                     st.session_state.current_question_idx = 0
+                    st.session_state.prep_advice = {}
+                    st.session_state.job_role = final_role
                 st.success(f"Generated {len(questions)} questions! Head to the 'Interview' tab.")
             except Exception as e:
                 st.error(f"Error generating questions: {str(e)}. Make sure your API key is correct.")
@@ -104,6 +111,56 @@ with tab2:
             st.progress((q_idx) / len(st.session_state.questions))
             st.markdown(f"### Question {q_idx + 1} of {len(st.session_state.questions)}")
             st.info(st.session_state.questions[q_idx])
+            
+            # --- Personalized AI Answer Prep Agent ---
+            with st.expander("🤖 Personal AI Answer Prep Coach (Stuck? Click for Hints or STAR Outline!)", expanded=False):
+                st.markdown("Your AI Coach knows your resume inside out and can help you brainstorm or structure your answer before submitting!")
+                
+                prep_col1, prep_col2, prep_col3 = st.columns(3)
+                with prep_col1:
+                    if st.button("🎯 Suggest Resume Points", key=f"prep_btn1_{q_idx}"):
+                        with st.spinner("Coach is analyzing your resume..."):
+                            try:
+                                llm = get_llm()
+                                advice = get_prep_guidance(llm, st.session_state.get('job_role', final_role), st.session_state.resume_text, st.session_state.questions[q_idx], "What specific projects or experiences from my resume should I highlight to answer this question effectively?")
+                                st.session_state.prep_advice[q_idx] = f"**🎯 Recommended Resume Talking Points:**\n\n{advice}"
+                            except Exception as e:
+                                st.error(f"Error getting advice: {e}")
+                with prep_col2:
+                    if st.button("📐 STAR Method Outline", key=f"prep_btn2_{q_idx}"):
+                        with st.spinner("Coach is structuring STAR template..."):
+                            try:
+                                llm = get_llm()
+                                advice = get_prep_guidance(llm, st.session_state.get('job_role', final_role), st.session_state.resume_text, st.session_state.questions[q_idx], "Provide a customized STAR (Situation, Task, Action, Result) template outline specifically tailored for answering this question using my background.")
+                                st.session_state.prep_advice[q_idx] = f"**📐 Tailored STAR Method Outline:**\n\n{advice}"
+                            except Exception as e:
+                                st.error(f"Error getting advice: {e}")
+                with prep_col3:
+                    if st.button("💡 Key Technical Terms", key=f"prep_btn3_{q_idx}"):
+                        with st.spinner("Coach is finding keywords..."):
+                            try:
+                                llm = get_llm()
+                                advice = get_prep_guidance(llm, st.session_state.get('job_role', final_role), st.session_state.resume_text, st.session_state.questions[q_idx], "What key technical keywords, skills, or industry terms should I make sure to mention in my answer to impress the interviewer?")
+                                st.session_state.prep_advice[q_idx] = f"**💡 Keywords & Technical Terms to Include:**\n\n{advice}"
+                            except Exception as e:
+                                st.error(f"Error getting advice: {e}")
+                
+                custom_prep_query = st.text_input("Or ask your AI Coach any custom question:", placeholder="e.g., How can I start my answer with a strong hook?", key=f"prep_input_{q_idx}")
+                if st.button("Ask Coach", key=f"prep_ask_{q_idx}"):
+                    if custom_prep_query:
+                        with st.spinner("Coach is thinking..."):
+                            try:
+                                llm = get_llm()
+                                advice = get_prep_guidance(llm, st.session_state.get('job_role', final_role), st.session_state.resume_text, st.session_state.questions[q_idx], custom_prep_query)
+                                st.session_state.prep_advice[q_idx] = f"**💬 Coach Advice for '{custom_prep_query}':**\n\n{advice}"
+                            except Exception as e:
+                                st.error(f"Error getting advice: {e}")
+                    else:
+                        st.warning("Please type a question for the coach first.")
+                
+                if q_idx in st.session_state.prep_advice:
+                    st.markdown("---")
+                    st.markdown(st.session_state.prep_advice[q_idx])
             
             # Answer input methods
             st.write("#### Your Answer")
