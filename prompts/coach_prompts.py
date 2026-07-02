@@ -1,4 +1,4 @@
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
 star_coach_prompt = PromptTemplate(
     input_variables=["job_role", "question", "resume_summary"],

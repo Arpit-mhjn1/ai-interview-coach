@@ -1,5 +1,5 @@
 from prompts.coach_prompts import star_coach_prompt, chat_coach_system_prompt
-from langchain.schema import SystemMessage, HumanMessage, AIMessage
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
 def generate_star_guidance(llm, job_role: str, question: str, resume_summary: str) -> str:
     """
