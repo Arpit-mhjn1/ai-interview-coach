@@ -5,125 +5,10 @@ from utils.resume_parser import parse_resume, extract_key_info
 from utils.question_generator import generate_questions
 from utils.answer_evaluator import evaluate_answer
 from utils.speech_to_text import transcribe_audio_bytes
-from utils.prep_agent import get_prep_guidance
+from utils.answer_coach import generate_star_guidance, get_coach_chat_response
 
 # --- Page Config ---
 st.set_page_config(page_title=APP_TITLE, page_icon=PAGE_ICON, layout="wide")
-
-# --- Custom Styling (Rich Aesthetics & Glassmorphism) ---
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
-
-html, body, [class*="css"] {
-    font-family: 'Outfit', sans-serif;
-}
-
-/* App Header & Title */
-h1, h2, h3 {
-    font-weight: 700 !important;
-    background: linear-gradient(135deg, #c084fc 0%, #818cf8 50%, #60a5fa 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* Expander Styling (AI Prep Coach & Others) */
-[data-testid="stExpander"] {
-    border: 1px solid rgba(168, 85, 247, 0.45) !important;
-    border-radius: 16px !important;
-    background: linear-gradient(135deg, rgba(30, 27, 75, 0.45) 0%, rgba(15, 23, 42, 0.75) 100%) !important;
-    box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.35) !important;
-    backdrop-filter: blur(14px) !important;
-    overflow: hidden !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    margin: 18px 0 !important;
-}
-
-[data-testid="stExpander"]:hover {
-    border-color: rgba(192, 132, 252, 0.85) !important;
-    box-shadow: 0 15px 35px -5px rgba(168, 85, 247, 0.5) !important;
-    transform: translateY(-2px);
-}
-
-[data-testid="stExpander"] summary {
-    font-weight: 600 !important;
-    font-size: 1.1rem !important;
-    color: #f8fafc !important;
-    padding: 16px 20px !important;
-    background: rgba(168, 85, 247, 0.18) !important;
-    border-bottom: 1px solid rgba(168, 85, 247, 0.25) !important;
-}
-
-[data-testid="stExpander"] summary:hover {
-    color: #c084fc !important;
-}
-
-/* Buttons */
-[data-testid="stButton"] button {
-    border-radius: 10px !important;
-    font-weight: 600 !important;
-    padding: 0.6rem 1.2rem !important;
-    transition: all 0.3s ease !important;
-    border: 1px solid rgba(168, 85, 247, 0.35) !important;
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%) !important;
-    color: #e2e8f0 !important;
-}
-
-[data-testid="stButton"] button:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.45) !important;
-    border-color: #c084fc !important;
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.35) 0%, rgba(99, 102, 241, 0.35) 100%) !important;
-    color: #ffffff !important;
-}
-
-/* Tabs */
-[data-testid="stTabs"] [data-baseweb="tab-list"] {
-    gap: 12px !important;
-    background: rgba(15, 23, 42, 0.7) !important;
-    padding: 10px !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
-}
-
-[data-testid="stTabs"] [data-baseweb="tab"] {
-    border-radius: 10px !important;
-    padding: 10px 20px !important;
-    font-weight: 600 !important;
-    color: #94a3b8 !important;
-    transition: all 0.2s ease !important;
-}
-
-[data-testid="stTabs"] [aria-selected="true"] {
-    background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%) !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.45) !important;
-}
-
-/* Info & Alerts */
-[data-testid="stAlert"] {
-    border-radius: 12px !important;
-    border: 1px solid rgba(168, 85, 247, 0.35) !important;
-    background: linear-gradient(135deg, rgba(30, 27, 75, 0.5) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
-    backdrop-filter: blur(10px) !important;
-}
-
-/* Text Areas and Inputs */
-[data-testid="stTextArea"] textarea, [data-testid="stTextInput"] input {
-    border-radius: 10px !important;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
-    background: rgba(15, 23, 42, 0.6) !important;
-    color: #f8fafc !important;
-}
-
-[data-testid="stTextArea"] textarea:focus, [data-testid="stTextInput"] input:focus {
-    border-color: #c084fc !important;
-    box-shadow: 0 0 12px rgba(168, 85, 247, 0.4) !important;
-}
-</style>
-""", unsafe_allow_html=True)
 
 # --- Session State Initialization ---
 if 'resume_text' not in st.session_state:
@@ -136,10 +21,12 @@ if 'evaluations' not in st.session_state:
     st.session_state.evaluations = {} # {question_idx: evaluation_dict}
 if 'current_question_idx' not in st.session_state:
     st.session_state.current_question_idx = 0
-if 'prep_advice' not in st.session_state:
-    st.session_state.prep_advice = {} # {question_idx: prep_advice_text}
-if 'job_role' not in st.session_state:
-    st.session_state.job_role = ""
+if 'coach_guidance' not in st.session_state:
+    st.session_state.coach_guidance = {} # {question_idx: guidance_markdown}
+if 'coach_chat_history' not in st.session_state:
+    st.session_state.coach_chat_history = [] # list of {role, content}
+if 'target_role' not in st.session_state:
+    st.session_state.target_role = "Software Engineer"
 
 # --- Sidebar Configuration ---
 with st.sidebar:
@@ -152,7 +39,7 @@ with st.sidebar:
 st.title(f"{PAGE_ICON} {APP_TITLE}")
 
 # Tab navigation to simulate steps
-tab1, tab2, tab3, tab4 = st.tabs(["1. Setup Profile", "2. Interview", "3. Feedback", "4. Final Report"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["1. Setup Profile", "2. Mock Interview", "3. 🤖 AI Prep Coach", "4. Feedback", "5. Final Report"])
 
 with tab1:
     st.header("Step 1: Resume & Role Setup")
@@ -182,6 +69,7 @@ with tab1:
             custom_role = st.text_input("Enter Custom Job Role")
         
         final_role = custom_role if selected_role == "Custom..." else selected_role
+        st.session_state.target_role = final_role
         
         job_description = st.text_area("Job Description (Optional)", placeholder="Paste the job description here to tailor the questions even more.")
         num_qs = st.slider("Number of Questions", min_value=3, max_value=10, value=5)
@@ -207,8 +95,6 @@ with tab1:
                     st.session_state.answers = {}
                     st.session_state.evaluations = {}
                     st.session_state.current_question_idx = 0
-                    st.session_state.prep_advice = {}
-                    st.session_state.job_role = final_role
                 st.success(f"Generated {len(questions)} questions! Head to the 'Interview' tab.")
             except Exception as e:
                 st.error(f"Error generating questions: {str(e)}. Make sure your API key is correct.")
@@ -227,61 +113,25 @@ with tab2:
             st.markdown(f"### Question {q_idx + 1} of {len(st.session_state.questions)}")
             st.info(st.session_state.questions[q_idx])
             
-            # --- Personalized AI Answer Prep Agent ---
-            with st.expander("🤖✨ Personal AI Answer Prep Coach — Click for Custom Hints, Resume Points & STAR Outlines!", expanded=False):
-                st.markdown("""
-                <div style="padding: 14px 18px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%); border-radius: 12px; border-left: 4px solid #a855f7; margin-bottom: 18px;">
-                    <p style="margin: 0; font-size: 0.98rem; color: #f8fafc; line-height: 1.5;">
-                        💡 <b>Your Personal AI Mentor is ready!</b> I have analyzed your resume and target role. Click any button below for instant, one-click tailored advice, or ask me any custom preparation question!
-                    </p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                prep_col1, prep_col2, prep_col3 = st.columns(3)
-                with prep_col1:
-                    if st.button("🎯 Suggest Resume Points", key=f"prep_btn1_{q_idx}"):
-                        with st.spinner("Coach is analyzing your resume..."):
-                            try:
-                                llm = get_llm()
-                                advice = get_prep_guidance(llm, st.session_state.get('job_role', final_role), st.session_state.resume_text, st.session_state.questions[q_idx], "What specific projects or experiences from my resume should I highlight to answer this question effectively?")
-                                st.session_state.prep_advice[q_idx] = f"**🎯 Recommended Resume Talking Points:**\n\n{advice}"
-                            except Exception as e:
-                                st.error(f"Error getting advice: {e}")
-                with prep_col2:
-                    if st.button("📐 STAR Method Outline", key=f"prep_btn2_{q_idx}"):
-                        with st.spinner("Coach is structuring STAR template..."):
-                            try:
-                                llm = get_llm()
-                                advice = get_prep_guidance(llm, st.session_state.get('job_role', final_role), st.session_state.resume_text, st.session_state.questions[q_idx], "Provide a customized STAR (Situation, Task, Action, Result) template outline specifically tailored for answering this question using my background.")
-                                st.session_state.prep_advice[q_idx] = f"**📐 Tailored STAR Method Outline:**\n\n{advice}"
-                            except Exception as e:
-                                st.error(f"Error getting advice: {e}")
-                with prep_col3:
-                    if st.button("💡 Key Technical Terms", key=f"prep_btn3_{q_idx}"):
-                        with st.spinner("Coach is finding keywords..."):
-                            try:
-                                llm = get_llm()
-                                advice = get_prep_guidance(llm, st.session_state.get('job_role', final_role), st.session_state.resume_text, st.session_state.questions[q_idx], "What key technical keywords, skills, or industry terms should I make sure to mention in my answer to impress the interviewer?")
-                                st.session_state.prep_advice[q_idx] = f"**💡 Keywords & Technical Terms to Include:**\n\n{advice}"
-                            except Exception as e:
-                                st.error(f"Error getting advice: {e}")
-                
-                custom_prep_query = st.text_input("Or ask your AI Coach any custom question:", placeholder="e.g., How can I start my answer with a strong hook?", key=f"prep_input_{q_idx}")
-                if st.button("Ask Coach", key=f"prep_ask_{q_idx}"):
-                    if custom_prep_query:
-                        with st.spinner("Coach is thinking..."):
-                            try:
-                                llm = get_llm()
-                                advice = get_prep_guidance(llm, st.session_state.get('job_role', final_role), st.session_state.resume_text, st.session_state.questions[q_idx], custom_prep_query)
-                                st.session_state.prep_advice[q_idx] = f"**💬 Coach Advice for '{custom_prep_query}':**\n\n{advice}"
-                            except Exception as e:
-                                st.error(f"Error getting advice: {e}")
-                    else:
-                        st.warning("Please type a question for the coach first.")
-                
-                if q_idx in st.session_state.prep_advice:
-                    st.markdown("---")
-                    st.info(st.session_state.prep_advice[q_idx], icon="✨")
+            # --- AI Coach Prep Section ---
+            with st.expander("💡 Need Help Preparing Your Answer? Ask Your AI Coach"):
+                st.markdown("Get custom STAR talking points tailored to your uploaded resume for this question.")
+                if st.button("✨ Generate Personalized STAR Talking Points", key=f"coach_btn_{q_idx}"):
+                    try:
+                        llm = get_llm()
+                        with st.spinner("Analyzing your resume and drafting STAR strategy..."):
+                            guidance = generate_star_guidance(
+                                llm=llm,
+                                job_role=st.session_state.target_role,
+                                question=st.session_state.questions[q_idx],
+                                resume_summary=st.session_state.resume_text[:6000]
+                            )
+                            st.session_state.coach_guidance[q_idx] = guidance
+                    except Exception as e:
+                        st.error(f"Error generating coach guidance: {str(e)}")
+                        
+                if q_idx in st.session_state.coach_guidance:
+                    st.markdown(st.session_state.coach_guidance[q_idx])
             
             # Answer input methods
             st.write("#### Your Answer")
@@ -312,7 +162,7 @@ with tab2:
                         with st.spinner("Evaluating your answer..."):
                             evaluation = evaluate_answer(
                                 llm=llm,
-                                job_role=final_role, # type: ignore (it's in the broader scope, but let's be careful)
+                                job_role=st.session_state.target_role,
                                 question=st.session_state.questions[q_idx],
                                 answer=final_answer
                             )
@@ -331,7 +181,47 @@ with tab2:
 
 
 with tab3:
-    st.header("Step 3: Instant Feedback")
+    st.header("Step 3: 🤖 Personalized AI Prep Coach ('Coach Alex')")
+    st.write("Chat with your personal AI mentor! Ask for help brainstorming answers, structuring your background, negotiating salary, or overcoming interview anxiety.")
+    
+    if not st.session_state.resume_text:
+        st.warning("⚠️ For the most personalized advice, please upload your resume in Step 1!")
+    
+    # Display chat messages from history
+    for message in st.session_state.coach_chat_history:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+            
+    # Accept user input
+    if prompt := st.chat_input("Ask Coach Alex anything (e.g., 'How do I explain my employment gap based on my resume?')..."):
+        st.session_state.coach_chat_history.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+            
+        with st.chat_message("assistant"):
+            with st.spinner("Coach Alex is thinking..."):
+                try:
+                    llm = get_llm()
+                    response = get_coach_chat_response(
+                        llm=llm,
+                        chat_history=st.session_state.coach_chat_history,
+                        job_role=st.session_state.target_role,
+                        resume_summary=st.session_state.resume_text[:6000]
+                    )
+                    st.markdown(response)
+                    st.session_state.coach_chat_history.append({"role": "assistant", "content": response})
+                except Exception as e:
+                    st.error(f"Error communicating with Coach Alex: {str(e)}")
+    
+    if st.session_state.coach_chat_history:
+        st.markdown("---")
+        if st.button("🗑️ Clear Coach Chat"):
+            st.session_state.coach_chat_history = []
+            st.rerun()
+
+
+with tab4:
+    st.header("Step 4: Instant Feedback")
     
     if not st.session_state.evaluations:
         st.info("Answer some questions to see feedback here.")
@@ -357,8 +247,8 @@ with tab3:
                 st.markdown(eval_data.get('raw_feedback', 'No detailed feedback available.'))
 
 
-with tab4:
-    st.header("Step 4: Final Report")
+with tab5:
+    st.header("Step 5: Final Report")
     
     if len(st.session_state.evaluations) < len(st.session_state.questions) or len(st.session_state.questions) == 0:
         st.info("Complete all interview questions to generate the final report.")
