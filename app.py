@@ -10,6 +10,121 @@ from utils.prep_agent import get_prep_guidance
 # --- Page Config ---
 st.set_page_config(page_title=APP_TITLE, page_icon=PAGE_ICON, layout="wide")
 
+# --- Custom Styling (Rich Aesthetics & Glassmorphism) ---
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* App Header & Title */
+h1, h2, h3 {
+    font-weight: 700 !important;
+    background: linear-gradient(135deg, #c084fc 0%, #818cf8 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Expander Styling (AI Prep Coach & Others) */
+[data-testid="stExpander"] {
+    border: 1px solid rgba(168, 85, 247, 0.45) !important;
+    border-radius: 16px !important;
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.45) 0%, rgba(15, 23, 42, 0.75) 100%) !important;
+    box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.35) !important;
+    backdrop-filter: blur(14px) !important;
+    overflow: hidden !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    margin: 18px 0 !important;
+}
+
+[data-testid="stExpander"]:hover {
+    border-color: rgba(192, 132, 252, 0.85) !important;
+    box-shadow: 0 15px 35px -5px rgba(168, 85, 247, 0.5) !important;
+    transform: translateY(-2px);
+}
+
+[data-testid="stExpander"] summary {
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    color: #f8fafc !important;
+    padding: 16px 20px !important;
+    background: rgba(168, 85, 247, 0.18) !important;
+    border-bottom: 1px solid rgba(168, 85, 247, 0.25) !important;
+}
+
+[data-testid="stExpander"] summary:hover {
+    color: #c084fc !important;
+}
+
+/* Buttons */
+[data-testid="stButton"] button {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
+    transition: all 0.3s ease !important;
+    border: 1px solid rgba(168, 85, 247, 0.35) !important;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%) !important;
+    color: #e2e8f0 !important;
+}
+
+[data-testid="stButton"] button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.45) !important;
+    border-color: #c084fc !important;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.35) 0%, rgba(99, 102, 241, 0.35) 100%) !important;
+    color: #ffffff !important;
+}
+
+/* Tabs */
+[data-testid="stTabs"] [data-baseweb="tab-list"] {
+    gap: 12px !important;
+    background: rgba(15, 23, 42, 0.7) !important;
+    padding: 10px !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+[data-testid="stTabs"] [data-baseweb="tab"] {
+    border-radius: 10px !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    color: #94a3b8 !important;
+    transition: all 0.2s ease !important;
+}
+
+[data-testid="stTabs"] [aria-selected="true"] {
+    background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.45) !important;
+}
+
+/* Info & Alerts */
+[data-testid="stAlert"] {
+    border-radius: 12px !important;
+    border: 1px solid rgba(168, 85, 247, 0.35) !important;
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.5) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Text Areas and Inputs */
+[data-testid="stTextArea"] textarea, [data-testid="stTextInput"] input {
+    border-radius: 10px !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    color: #f8fafc !important;
+}
+
+[data-testid="stTextArea"] textarea:focus, [data-testid="stTextInput"] input:focus {
+    border-color: #c084fc !important;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.4) !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # --- Session State Initialization ---
 if 'resume_text' not in st.session_state:
     st.session_state.resume_text = ""
@@ -113,8 +228,14 @@ with tab2:
             st.info(st.session_state.questions[q_idx])
             
             # --- Personalized AI Answer Prep Agent ---
-            with st.expander("🤖 Personal AI Answer Prep Coach (Stuck? Click for Hints or STAR Outline!)", expanded=False):
-                st.markdown("Your AI Coach knows your resume inside out and can help you brainstorm or structure your answer before submitting!")
+            with st.expander("🤖✨ Personal AI Answer Prep Coach — Click for Custom Hints, Resume Points & STAR Outlines!", expanded=False):
+                st.markdown("""
+                <div style="padding: 14px 18px; background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%); border-radius: 12px; border-left: 4px solid #a855f7; margin-bottom: 18px;">
+                    <p style="margin: 0; font-size: 0.98rem; color: #f8fafc; line-height: 1.5;">
+                        💡 <b>Your Personal AI Mentor is ready!</b> I have analyzed your resume and target role. Click any button below for instant, one-click tailored advice, or ask me any custom preparation question!
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
                 
                 prep_col1, prep_col2, prep_col3 = st.columns(3)
                 with prep_col1:
@@ -160,7 +281,7 @@ with tab2:
                 
                 if q_idx in st.session_state.prep_advice:
                     st.markdown("---")
-                    st.markdown(st.session_state.prep_advice[q_idx])
+                    st.info(st.session_state.prep_advice[q_idx], icon="✨")
             
             # Answer input methods
             st.write("#### Your Answer")
