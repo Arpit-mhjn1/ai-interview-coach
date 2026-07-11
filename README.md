@@ -33,14 +33,16 @@ A stunning, full-stack **AI Interview Coach & Personalized Career Mentor** built
 * **Final Report Summary:** An end-of-interview report card with aggregate performance metrics and recommendations.
 
 ### 6. 📱 Mobile-Friendly & Responsive UI
-* **Touch-Optimized Controls:** Full-width touch buttons, compact tab navigation (`Setup`, `Interview`, `Coach`, `Feedback`, `Report`), and responsive padding for mobile & tablet viewports.
-* **No iOS Safari Zoom:** Input font sizing optimized to prevent awkward zooming on mobile devices.
+* **Touch-Optimized Controls:** Full-width primary buttons (`100%` width with comfortable touch target heights) on mobile and tablet screens (<768px).
+* **Compact Horizontal Tab Navigation:** Concise tab names (`Setup`, `Interview`, `Coach`, `Feedback`, `Report`) equipped with smooth touch-scroll support so navigation never wraps awkwardly on small phone screens.
+* **No iOS Safari Auto-Zoom:** Smart `16px` minimum font sizing across text inputs, dropdowns, and chat boxes prevents unwanted viewport zooming on iPhones and iPads.
+* **Adaptive Padding & Viewport Layout:** Maximizes viewable screen area on smaller devices while maintaining sleek card styling.
 
 ---
 
 ## 🛠️ Tech Stack & Architecture
 
-* **Frontend:** Streamlit (Responsive UI, multi-step tab workflow, audio capture, chat interface)
+* **Frontend:** Streamlit (Fully responsive mobile-friendly UI, multi-step tab workflow, audio capture, chat interface)
 * **AI & Orchestration:** LangChain Core (`langchain_core`)
 * **LLM Engine:** Groq API running Meta's **`llama-3.3-70b-versatile`** model for lightning-fast inference
 * **Document Processing:** PyPDF2 & `python-docx` for resume extraction
