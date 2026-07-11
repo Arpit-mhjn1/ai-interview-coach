@@ -2,6 +2,10 @@
 
 A stunning, full-stack **AI Interview Coach & Personalized Career Mentor** built with Python, Streamlit, LangChain, and powered by ultra-fast **Groq (Meta Llama 3.3 70B)**.
 
+<div align="center">
+  <img src="Screenshot.png" alt="AI Interview Coach Interface" width="85%"/>
+</div>
+
 ---
 
 ## ✨ Key Features
