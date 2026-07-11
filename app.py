@@ -11,9 +11,40 @@ from utils.ui_components import render_js_hero_header, render_js_interview_timer
 # --- Page Config ---
 st.set_page_config(page_title=APP_TITLE, page_icon=PAGE_ICON, layout="wide", initial_sidebar_state="auto")
 
-# --- Mobile & Responsive Styling ---
+# --- Mobile & Responsive & Global Theme Styling ---
 st.markdown("""
 <style>
+    /* Global App Background matching Hero Banner (#0f172a Deep Slate / Indigo) */
+    .stApp {
+        background-color: #0f172a !important;
+        color: #f8fafc !important;
+    }
+    /* Ensure clean typography contrast */
+    h1, h2, h3, h4, h5, h6, p, label, span {
+        color: #f8fafc;
+    }
+    /* Aesthetic Tab Bar matching Hero Banner */
+    div[data-baseweb="tab-list"] {
+        background-color: rgba(30, 27, 75, 0.45) !important;
+        border-radius: 12px;
+        padding: 6px;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+    div[data-baseweb="tab"] {
+        color: #c7d2fe !important;
+        font-weight: 600 !important;
+    }
+    div[aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(99, 102, 241, 0.35)) !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+    }
+    /* Sidebar matching deep indigo aesthetic */
+    section[data-testid="stSidebar"] {
+        background-color: #111827 !important;
+        border-right: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
     /* Mobile & Tablet Layout Optimization */
     @media screen and (max-width: 768px) {
         .block-container {
