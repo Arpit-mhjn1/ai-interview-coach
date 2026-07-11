@@ -6,6 +6,7 @@ from utils.question_generator import generate_questions
 from utils.answer_evaluator import evaluate_answer
 from utils.speech_to_text import transcribe_audio_bytes
 from utils.answer_coach import generate_star_guidance, get_coach_chat_response
+from utils.ui_components import render_js_hero_header, render_js_interview_timer, render_js_radar_chart
 
 # --- Page Config ---
 st.set_page_config(page_title=APP_TITLE, page_icon=PAGE_ICON, layout="wide", initial_sidebar_state="auto")
@@ -74,7 +75,8 @@ with st.sidebar:
     st.info("Using Groq Llama 3 for ultra-fast, free generation.")
 
 # --- Main App Logic ---
-st.title(f"{PAGE_ICON} {APP_TITLE}")
+render_js_hero_header()
+st.markdown("") # spacing
 
 # Tab navigation to simulate steps
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["1. Setup", "2. Interview", "3. 🤖 Coach", "4. Feedback", "5. Report"])
@@ -169,6 +171,7 @@ with tab2:
         
         if q_idx < len(st.session_state.questions):
             st.progress((q_idx) / len(st.session_state.questions))
+            render_js_interview_timer()
             st.markdown(f"### Question {q_idx + 1} of {len(st.session_state.questions)}")
             st.info(st.session_state.questions[q_idx])
             
@@ -326,6 +329,7 @@ with tab5:
         final_average = round(total_overall / valid_scores_count, 1) if valid_scores_count > 0 else 0
         
         st.metric("Final Interview Score", f"{final_average}/10")
+        render_js_radar_chart(st.session_state.evaluations)
         
         if final_average >= 8:
             st.balloons()

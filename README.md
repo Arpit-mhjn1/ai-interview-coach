@@ -40,6 +40,11 @@ A stunning, full-stack **AI Interview Coach & Personalized Career Mentor** built
 * **No iOS Safari Auto-Zoom:** Smart `16px` minimum font sizing across text inputs, dropdowns, and chat boxes prevents unwanted viewport zooming on iPhones and iPads.
 * **Adaptive Padding & Viewport Layout:** Maximizes viewable screen area on smaller devices while maintaining sleek card styling.
 
+### 7. ⚡ Aesthetic Interactive JavaScript UI Components
+* **Animated Particle Cyber-Header:** Dynamic floating particle mesh animation (`HTML5 Canvas` + `JavaScript`) with pulsing status badges and interactive glowing stat cards.
+* **Interactive STAR Target Pace Timer:** JavaScript-powered visual countdown & pace timer inside **Step 2** helping candidates time their 2-minute interview answers.
+* **Interactive Chart.js Radar & Bar Analytics:** Dynamic interactive performance chart visualizer inside **Step 5** summarizing multi-metric evaluation scores.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
