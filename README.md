@@ -10,9 +10,11 @@ A stunning, full-stack **AI Interview Coach & Personalized Career Mentor** built
 
 ## ✨ Key Features
 
-### 1. 📄 Intelligent Resume & Role Tailoring
+### 1. 📄 Intelligent Resume Tailoring & Dynamic Question Engine
 * **Resume Parsing:** Upload your resume in **PDF** or **DOCX** format; the app extracts key experience, skills, and achievements.
 * **Role Customization:** Select from industry-standard roles or define custom roles alongside specific job descriptions to tailor every question to your exact target position.
+* **Dynamic Anti-Repetition Engine:** Injects randomized session inquiry themes and anti-boilerplate rules so every interview run produces fresh, non-repetitive questions probing specific resume projects.
+* **Custom Focus Categories & Difficulty Rigor:** Select your preferred focus style (`Dynamic & Balanced`, `Deep Technical & System Architecture`, `Resume Project Deep-Dive`, `Challenging Curveball Scenarios`, `Leadership & Behavioral`) and difficulty rigor (`Standard`, `Senior Level`, `FAANG Bar-Raiser`).
 
 ### 2. 💡 Personalized AI Answer Coach (STAR Guidance)
 * **On-the-Spot STAR Strategy:** During the mock interview, click **"✨ Generate Personalized STAR Talking Points"** under any question.

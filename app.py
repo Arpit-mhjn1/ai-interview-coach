@@ -110,6 +110,25 @@ with tab1:
         st.session_state.target_role = final_role
         
         job_description = st.text_area("Job Description (Optional)", placeholder="Paste the job description here to tailor the questions even more.")
+        
+        focus_style = st.selectbox(
+            "Interview Focus Category",
+            [
+                "Dynamic & Balanced (Variety of behavioral, technical, & curveball)",
+                "Deep Technical & System Architecture Probe",
+                "Resume Project Deep-Dive (Line-by-Line Probe)",
+                "Challenging Edge-Case & Curveball Scenarios",
+                "Leadership & Behavioral (STAR Oriented)"
+            ]
+        )
+        difficulty_level = st.selectbox(
+            "Difficulty Rigor",
+            [
+                "Standard / Realistic",
+                "Challenging / Senior Level",
+                "High-Pressure FAANG Bar-Raiser"
+            ]
+        )
         num_qs = st.slider("Number of Questions", min_value=3, max_value=10, value=5)
 
     if st.button("Generate Interview Questions", type="primary"):
@@ -120,13 +139,15 @@ with tab1:
         else:
             try:
                 llm = get_llm()
-                with st.spinner("Generating tailored questions..."):
+                with st.spinner("Generating tailored, non-repetitive questions..."):
                     questions = generate_questions(
                         llm=llm,
                         job_role=final_role,
-                        resume_summary=st.session_state.resume_text[:8000], # truncating for safety
+                        resume_summary=st.session_state.resume_text[:8000],
                         job_description=job_description,
-                        num_questions=num_qs
+                        num_questions=num_qs,
+                        focus_style=focus_style,
+                        difficulty_level=difficulty_level
                     )
                     st.session_state.questions = questions
                     # Reset interview state
