@@ -8,7 +8,45 @@ from utils.speech_to_text import transcribe_audio_bytes
 from utils.answer_coach import generate_star_guidance, get_coach_chat_response
 
 # --- Page Config ---
-st.set_page_config(page_title=APP_TITLE, page_icon=PAGE_ICON, layout="wide")
+st.set_page_config(page_title=APP_TITLE, page_icon=PAGE_ICON, layout="wide", initial_sidebar_state="auto")
+
+# --- Mobile & Responsive Styling ---
+st.markdown("""
+<style>
+    /* Mobile & Tablet Layout Optimization */
+    @media screen and (max-width: 768px) {
+        .block-container {
+            padding-top: 1.5rem !important;
+            padding-left: 0.8rem !important;
+            padding-right: 0.8rem !important;
+            padding-bottom: 3rem !important;
+        }
+        /* Make primary buttons full-width and touch-friendly on mobile */
+        div.stButton > button {
+            width: 100% !important;
+            min-height: 46px !important;
+            font-size: 16px !important;
+            border-radius: 10px !important;
+        }
+        /* Ensure font size >= 16px on inputs so iOS Safari does not auto-zoom */
+        input, textarea, select {
+            font-size: 16px !important;
+        }
+        /* Enable smooth horizontal scrolling for Streamlit tabs on mobile */
+        div[data-baseweb="tab-list"] {
+            gap: 4px;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            flex-wrap: nowrap !important;
+        }
+        div[data-baseweb="tab"] {
+            padding: 8px 12px !important;
+            font-size: 14px !important;
+            white-space: nowrap !important;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # --- Session State Initialization ---
 if 'resume_text' not in st.session_state:
@@ -39,7 +77,7 @@ with st.sidebar:
 st.title(f"{PAGE_ICON} {APP_TITLE}")
 
 # Tab navigation to simulate steps
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["1. Setup Profile", "2. Mock Interview", "3. 🤖 AI Prep Coach", "4. Feedback", "5. Final Report"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["1. Setup", "2. Interview", "3. 🤖 Coach", "4. Feedback", "5. Report"])
 
 with tab1:
     st.header("Step 1: Resume & Role Setup")

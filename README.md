@@ -32,6 +32,10 @@ A stunning, full-stack **AI Interview Coach & Personalized Career Mentor** built
 * **Actionable Feedback:** Detailed constructive feedback explaining what went well and what to improve.
 * **Final Report Summary:** An end-of-interview report card with aggregate performance metrics and recommendations.
 
+### 6. 📱 Mobile-Friendly & Responsive UI
+* **Touch-Optimized Controls:** Full-width touch buttons, compact tab navigation (`Setup`, `Interview`, `Coach`, `Feedback`, `Report`), and responsive padding for mobile & tablet viewports.
+* **No iOS Safari Zoom:** Input font sizing optimized to prevent awkward zooming on mobile devices.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
