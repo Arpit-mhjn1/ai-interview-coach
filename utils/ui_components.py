@@ -24,10 +24,12 @@ def render_js_hero_header():
           background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.85) 50%, rgba(15, 23, 42, 0.9) 100%);
           border: 1px solid rgba(139, 92, 246, 0.3);
           border-radius: 20px;
-          padding: 22px 32px;
+          padding: 24px 32px;
           box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
           overflow: hidden;
           display: flex;
+          flex-wrap: wrap;
+          gap: 24px;
           align-items: center;
           justify-content: space-between;
         }
@@ -43,7 +45,8 @@ def render_js_hero_header():
         .hero-content {
           position: relative;
           z-index: 2;
-          max-width: 65%;
+          flex: 1 1 380px;
+          max-width: 100%;
         }
         .badge {
           display: inline-flex;
@@ -229,7 +232,7 @@ def render_js_hero_header():
     </body>
     </html>
     """
-    components.html(hero_html, height=190)
+    components.html(hero_html, height=215)
 
 
 def render_js_interview_timer():
