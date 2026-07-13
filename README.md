@@ -45,11 +45,15 @@ A stunning, full-stack **AI Interview Coach & Personalized Career Mentor** built
 * **Interactive STAR Target Pace Timer:** JavaScript-powered visual countdown & pace timer inside **Step 2** helping candidates time their 2-minute interview answers.
 * **Interactive Chart.js Radar & Bar Analytics:** Dynamic interactive performance chart visualizer inside **Step 5** summarizing multi-metric evaluation scores.
 
+### 8. 🎨 Unified Dark Cyber Theme & Glassmorphism Aesthetics
+* **Harmonious Deep Slate Background (`#0f172a`):** Configured via `.streamlit/config.toml` and custom global CSS so the entire application background blends seamlessly with the dark indigo cyber-header without jarring white borders.
+* **Glassmorphic UI Cards:** Custom semi-transparent overlays, glowing indigo gradients (`#8b5cf6`), and high-contrast typography across navigation tabs, sidebar, and expanders.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
 
-* **Frontend:** Streamlit (Fully responsive mobile-friendly UI, multi-step tab workflow, audio capture, chat interface)
+* **Frontend:** Streamlit + Custom HTML5/JavaScript & CSS3 (Unified Dark Cyber theme `#0f172a`, responsive mobile-friendly UI, interactive Canvas particle animations, Chart.js analytics, audio recording)
 * **AI & Orchestration:** LangChain Core (`langchain_core`)
 * **LLM Engine:** Groq API running Meta's **`llama-3.3-70b-versatile`** model for lightning-fast inference
 * **Document Processing:** PyPDF2 & `python-docx` for resume extraction
