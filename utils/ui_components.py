@@ -23,13 +23,13 @@ def render_js_hero_header():
           position: relative;
           background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.85) 50%, rgba(15, 23, 42, 0.9) 100%);
           border: 1px solid rgba(139, 92, 246, 0.3);
-          border-radius: 20px;
-          padding: 24px 32px;
+          border-radius: 18px;
+          padding: 18px 24px;
           box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
           overflow: hidden;
           display: flex;
           flex-wrap: wrap;
-          gap: 24px;
+          gap: 16px;
           align-items: center;
           justify-content: space-between;
         }
@@ -45,29 +45,29 @@ def render_js_hero_header():
         .hero-content {
           position: relative;
           z-index: 2;
-          flex: 1 1 380px;
+          flex: 1 1 280px;
           max-width: 100%;
         }
         .badge {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
+          gap: 6px;
           background: rgba(99, 102, 241, 0.15);
           border: 1px solid rgba(129, 140, 248, 0.4);
-          padding: 6px 14px;
+          padding: 4px 12px;
           border-radius: 9999px;
-          font-size: 13px;
-          font-weight: 600;
+          font-size: 11px;
+          font-weight: 700;
           color: #a5b4fc;
           letter-spacing: 0.5px;
-          margin-bottom: 14px;
+          margin-bottom: 8px;
         }
         .pulse-dot {
-          width: 8px;
-          height: 8px;
+          width: 7px;
+          height: 7px;
           background: #34d399;
           border-radius: 50%;
-          box-shadow: 0 0 10px #34d399;
+          box-shadow: 0 0 8px #34d399;
           animation: pulse 1.8s infinite;
         }
         @keyframes pulse {
@@ -76,7 +76,7 @@ def render_js_hero_header():
           100% { transform: scale(0.95); opacity: 0.8; }
         }
         h1 {
-          font-size: 32px;
+          font-size: clamp(20px, 3vw, 28px);
           font-weight: 800;
           color: #ffffff;
           letter-spacing: -0.5px;
@@ -84,46 +84,48 @@ def render_js_hero_header():
           background: linear-gradient(to right, #ffffff, #c7d2fe, #f0abfc);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          margin-bottom: 8px;
+          margin-bottom: 6px;
         }
         p {
           font-family: 'Inter', sans-serif;
-          font-size: 15px;
+          font-size: 13.5px;
           color: #94a3b8;
-          line-height: 1.5;
+          line-height: 1.4;
+          margin: 0;
         }
         .hero-stats {
           position: relative;
           z-index: 2;
           display: flex;
-          gap: 16px;
+          flex-wrap: wrap;
+          gap: 12px;
         }
         .stat-card {
           background: rgba(255, 255, 255, 0.04);
           backdrop-filter: blur(10px);
           border: 1px solid rgba(255, 255, 255, 0.08);
-          padding: 14px 20px;
-          border-radius: 14px;
+          padding: 10px 16px;
+          border-radius: 12px;
           text-align: center;
           transition: transform 0.3s ease, border-color 0.3s ease;
           cursor: pointer;
         }
         .stat-card:hover {
-          transform: translateY(-3px);
+          transform: translateY(-2px);
           border-color: rgba(139, 92, 246, 0.6);
           background: rgba(255, 255, 255, 0.08);
         }
         .stat-num {
-          font-size: 22px;
+          font-size: 18px;
           font-weight: 800;
           color: #f8fafc;
-          margin-bottom: 2px;
+          margin-bottom: 1px;
         }
         .stat-label {
-          font-size: 11px;
+          font-size: 10px;
           color: #94a3b8;
           text-transform: uppercase;
-          letter-spacing: 0.8px;
+          letter-spacing: 0.6px;
           font-weight: 600;
         }
         @media (max-width: 768px) {
@@ -232,7 +234,7 @@ def render_js_hero_header():
     </body>
     </html>
     """
-    components.html(hero_html, height=215)
+    components.html(hero_html, height=240)
 
 
 def render_js_interview_timer():
